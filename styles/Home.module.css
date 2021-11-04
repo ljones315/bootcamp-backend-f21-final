@@ -114,3 +114,14 @@
     flex-direction: column;
   }
 }
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  cursor: pointer;
+}
+
+.row-child {
+  width: 20%;
+}
