@@ -11,6 +11,8 @@ export default function Home() {
   const [cuisine, setCuisine] = useState('')
   const [neighborhood, setNeighborhood] = useState('')
   const [grades, setGrades] = useState('')
+  const PAGE_SIZE = 10
+  const page = 1;
 
   const [selects, setSelects] = useState({
     borough: ['dummy', 'dummy1', 'dummy 3'],
@@ -26,7 +28,7 @@ export default function Home() {
       fetchHelper('/api/categories/boroughs'),
       fetchHelper('/api/categories/cuisines'),
       fetchHelper('/api/categories/neighborhoods'),
-      fetchHelper('/api/restaurants')
+      fetchHelper(`/api/restaurants?page=${page}&pageSize=${PAGE_SIZE}`)
     ])
     filters.then(([boroughs, cuisines, neighborhoods, restaurants])=>{
       if (restaurants) setRestaurants(restaurants)
@@ -44,12 +46,12 @@ export default function Home() {
   }
 
   const getRestaurants = () => {
-    let params = '?'
-    if (cuisine != '') params += `cuisine=${encodeURIComponent(cuisine)}&`
-    if (borough != '') params += `borough=${encodeURIComponent(borough)}&`
-    if (neighborhood != '') params += `neighborhood=${encodeURIComponent(neighborhood)}&`
-    if (grades != '') params += `sort_by=grades.${encodeURIComponent(grades)}&`
-    console.log(params)
+    let params = `?page=${page}&pageSize=${PAGE_SIZE}`
+    if (cuisine != '') params += `&cuisine=${encodeURIComponent(cuisine)}`
+    if (borough != '') params += `&borough=${encodeURIComponent(borough)}`
+    if (neighborhood != '') params += `&neighborhood=${encodeURIComponent(neighborhood)}`
+    if (grades != '') params += `&sort_by=grades.${encodeURIComponent(grades)}`
+    console.log(params + 'p');
     fetchHelper(`/api/restaurants${params}`).then(res => {
       setRestaurants(res)
     })

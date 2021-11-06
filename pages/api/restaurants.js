@@ -25,13 +25,33 @@ export default async function handler(req, res) {
   let sortOpts = {};
 
   if (sort) {
-    sortOpts.grade = sort.split('.')[1] === 'asc' ? 1 : -1;
-    console.log(sortOpts)
+    sortOpts['grades.0.score'] = sort.split('.')[1] === 'asc' ? 1 : -1;
   }
-  
+
+  let page = req.query.page;
+  let pageSize = req.query.pageSize;
+  console.log(req.query)
+
+  if (!pageSize) {
+    pageSize = 10;
+  } else {
+    pageSize = parseInt(pageSize);
+  }
+
+  if (!page) {
+    page = 1;
+  } else {
+    page = parseInt(page);
+  }
+
+  console.log(pageSize);
 
 
-  const results = await restaurants.find(findOptions).sort(sortOpts).limit(10).toArray();
+  const results = await restaurants.find(findOptions)
+    .sort(sortOpts)
+    .skip((page - 1) * pageSize)
+    .limit(pageSize)
+    .toArray();
   //console.log(results)
   res.status(200).json(results)
 }
