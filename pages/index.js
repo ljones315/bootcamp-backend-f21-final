@@ -12,7 +12,7 @@ export default function Home() {
   const [neighborhood, setNeighborhood] = useState('')
   const [grades, setGrades] = useState('')
   const PAGE_SIZE = 10
-  const page = 1;
+  const [page, setPage] = useState(1);
 
   const [selects, setSelects] = useState({
     borough: ['dummy', 'dummy1', 'dummy 3'],
@@ -45,7 +45,7 @@ export default function Home() {
     return fetch(path).then(r=>r.json())
   }
 
-  const getRestaurants = () => {
+  const getRestaurants = (page) => {
     let params = `?page=${page}&pageSize=${PAGE_SIZE}`
     if (cuisine != '') params += `&cuisine=${encodeURIComponent(cuisine)}`
     if (borough != '') params += `&borough=${encodeURIComponent(borough)}`
@@ -74,7 +74,23 @@ export default function Home() {
         <Select label="Cuisine" options={selects.cuisine} curr={cuisine} onChange={setCuisine}/>
         <Select label="Neighborhood" options={selects.neighborhood} curr={neighborhood} onChange={setNeighborhood}/>
         <Select label="Orders" options={gradeSelects} curr={grades} onChange={setGrades}/>
-        <button onClick={()=>getRestaurants()}>Apply Filters</button>
+        <button onClick={()=>getRestaurants(page)}>Apply Filters</button>
+
+        <div className={styles.arrows}>
+          <button onClick={()=> {
+            if (page !== 1) {
+              setPage(page - 1);
+            }
+            getRestaurants(page);
+          }}>Prev</button>
+          <button onClick={()=> {
+            if (page !== 10) {
+              setPage(page + 1);
+            }
+            getRestaurants(page);
+          }
+          }>Next</button>
+        </div>
 
         {restaurants.map((r,i)=> <RestaurantRow key={r.restaurant_id} restaurant={r}/>)}
         
