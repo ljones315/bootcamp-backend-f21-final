@@ -24,11 +24,16 @@ export default function Home() {
   const [restaurants, setRestaurants] = useState(dummyRestaurants)
 
   useEffect(() => {
+    let params = `?page=${page}&pageSize=${PAGE_SIZE}`
+      if (cuisine != '') params += `&cuisine=${encodeURIComponent(cuisine)}`
+      if (borough != '') params += `&borough=${encodeURIComponent(borough)}`
+      if (neighborhood != '') params += `&neighborhood=${encodeURIComponent(neighborhood)}`
+      if (grades != '') params += `&sort_by=grades.${encodeURIComponent(grades)}`
     const filters = Promise.all([
       fetchHelper('/api/categories/boroughs'),
       fetchHelper('/api/categories/cuisines'),
       fetchHelper('/api/categories/neighborhoods'),
-      fetchHelper(`/api/restaurants?page=${page}&pageSize=${PAGE_SIZE}`)
+      fetchHelper(`/api/restaurants${params}`)
     ])
     filters.then(([boroughs, cuisines, neighborhoods, restaurants])=>{
       if (restaurants) setRestaurants(restaurants)
@@ -39,22 +44,30 @@ export default function Home() {
         neighborhood: neighborhoods
       })
     })
-  },[])
+  },[page, cuisine, borough, neighborhood, grades]
+  )
 
   const fetchHelper = async (path) => {
     return fetch(path).then(r=>r.json())
   }
 
-  const getRestaurants = (page) => {
-    let params = `?page=${page}&pageSize=${PAGE_SIZE}`
-    if (cuisine != '') params += `&cuisine=${encodeURIComponent(cuisine)}`
-    if (borough != '') params += `&borough=${encodeURIComponent(borough)}`
-    if (neighborhood != '') params += `&neighborhood=${encodeURIComponent(neighborhood)}`
-    if (grades != '') params += `&sort_by=grades.${encodeURIComponent(grades)}`
-    console.log(params + 'p');
-    fetchHelper(`/api/restaurants${params}`).then(res => {
-      setRestaurants(res)
-    })
+  // const getRestaurants = (page) => {
+  //   let params = `?page=${page}&pageSize=${PAGE_SIZE}`
+  //   if (cuisine != '') params += `&cuisine=${encodeURIComponent(cuisine)}`
+  //   if (borough != '') params += `&borough=${encodeURIComponent(borough)}`
+  //   if (neighborhood != '') params += `&neighborhood=${encodeURIComponent(neighborhood)}`
+  //   if (grades != '') params += `&sort_by=grades.${encodeURIComponent(grades)}`
+  //   console.log(params + 'p');
+  //   fetchHelper(`/api/restaurants${params}`).then(res => {
+  //     setRestaurants(res)
+  //   })
+  // }
+
+  const clearFilters = () => {
+    setBorough('');
+    setCuisine('');
+    setNeighborhood('');
+    setPage(1);
   }
 
   return (
@@ -74,22 +87,23 @@ export default function Home() {
         <Select label="Cuisine" options={selects.cuisine} curr={cuisine} onChange={setCuisine}/>
         <Select label="Neighborhood" options={selects.neighborhood} curr={neighborhood} onChange={setNeighborhood}/>
         <Select label="Orders" options={gradeSelects} curr={grades} onChange={setGrades}/>
-        <button onClick={()=>getRestaurants(page)}>Apply Filters</button>
+        <button onClick={()=>{
+          clearFilters()
+          }
+          }>Reset Filters</button>
 
         <div className={styles.arrows}>
           <button onClick={()=> {
             if (page !== 1) {
               setPage(page - 1);
             }
-            getRestaurants(page);
-          }}>Prev</button>
+          }}>Prev Page</button>
           <button onClick={()=> {
             if (page !== 10) {
               setPage(page + 1);
             }
-            getRestaurants(page);
           }
-          }>Next</button>
+          }>Next Page</button>
         </div>
 
         {restaurants.map((r,i)=> <RestaurantRow key={r.restaurant_id} restaurant={r}/>)}

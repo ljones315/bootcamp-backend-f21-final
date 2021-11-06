@@ -5,6 +5,17 @@ export default async function handler(req, res) {
   const db = await mongo()
   const restaurants = db.collection('restaurants')
 
+  const neighborhoods = db.collection('neighborhoods')
+
+  const hood = req.query.neighborhood
+  let bounds = null;
+
+  if (hood) {
+    let neighborhood = await neighborhoods.findOne({name : hood});
+    bounds = {$geometry : neighborhood.geometry}
+  }
+  console.log(bounds)
+
   const cuisine = req.query.cuisine;
   const borough = req.query.borough;
   const neighborhood = req.query.neighborhood;
@@ -15,11 +26,11 @@ export default async function handler(req, res) {
   if (cuisine) {
     findOptions.cuisine = cuisine;
   }
-  if (neighborhood) {
-    findOptions.neighborhood = neighborhood;
-  }
   if (borough) {
     findOptions.borough = borough;
+  }
+  if (bounds) {
+    findOptions['address.coord'] = {$geoWithin : bounds};
   }
 
   let sortOpts = {};
@@ -30,7 +41,6 @@ export default async function handler(req, res) {
 
   let page = req.query.page;
   let pageSize = req.query.pageSize;
-  console.log(req.query)
 
   if (!pageSize) {
     pageSize = 10;
@@ -44,8 +54,7 @@ export default async function handler(req, res) {
     page = parseInt(page);
   }
 
-  console.log(pageSize);
-
+  console.log(findOptions)
 
   const results = await restaurants.find(findOptions)
     .sort(sortOpts)
