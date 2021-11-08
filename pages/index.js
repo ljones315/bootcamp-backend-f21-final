@@ -5,8 +5,10 @@ import RestaurantRow from '../components/RestaurantRow'
 import { useEffect, useState } from 'react'
 import Select from '../components/Select'
 import dummyRestaurants from '../dummy'
+import cache from 'memory-cache';
 
 export default function Home() {
+
   const [borough, setBorough] = useState('')
   const [cuisine, setCuisine] = useState('')
   const [neighborhood, setNeighborhood] = useState('')
@@ -47,8 +49,16 @@ export default function Home() {
   },[page, cuisine, borough, neighborhood, grades]
   )
 
-  const fetchHelper = async (path) => {
-    return fetch(path).then(r=>r.json())
+  async function fetchHelper(path) {
+    var data = cache.get(path);
+    if (data) {
+      console.log("It was me!")
+      return data;
+    } else {
+      data = fetch(path).then(r=>r.json());
+      cache.put(path, data, 1000 * 60 * 60); //one hour
+      return data;
+    }
   }
 
   // const getRestaurants = (page) => {
