@@ -14,11 +14,9 @@ export default async function handler(req, res) {
     let neighborhood = await neighborhoods.findOne({name : hood});
     bounds = {$geometry : neighborhood.geometry}
   }
-  console.log(bounds)
 
   const cuisine = req.query.cuisine;
   const borough = req.query.borough;
-  const neighborhood = req.query.neighborhood;
   const sort = req.query.sort_by;
 
   let findOptions = {};
@@ -53,8 +51,6 @@ export default async function handler(req, res) {
   } else {
     page = parseInt(page);
   }
-
-  console.log(findOptions)
 
   const results = await restaurants.find(findOptions)
     .sort(sortOpts)

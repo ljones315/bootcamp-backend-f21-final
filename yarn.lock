@@ -2089,6 +2089,11 @@
     "inherits" "^2.0.1"
     "safe-buffer" "^5.1.2"
 
+"memory-cache@^0.2.0":
+  "integrity" "sha1-eJCwHVLADI68nVM+H46xfjA0hxo="
+  "resolved" "https://registry.npmjs.org/memory-cache/-/memory-cache-0.2.0.tgz"
+  "version" "0.2.0"
+
 "memory-pager@^1.0.2":
   "integrity" "sha512-ZS4Bp4r/Zoeq6+NLJpP+0Zzm0pR8whtGPf1XExKLJBAczGMnSi3It14OiNCStjQjM6NU1okjQGSxgEZN8eBYKg=="
   "resolved" "https://registry.npmjs.org/memory-pager/-/memory-pager-1.5.0.tgz"
