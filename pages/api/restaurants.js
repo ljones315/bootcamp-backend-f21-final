@@ -35,6 +35,7 @@ export default async function handler(req, res) {
 
   if (sort) {
     sortOpts['grades.0.score'] = sort.split('.')[1] === 'asc' ? 1 : -1;
+    findOptions['grades.0.score'] = {$gt : 0};
   }
 
   let page = req.query.page;

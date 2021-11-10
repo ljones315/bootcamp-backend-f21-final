@@ -56,7 +56,7 @@ export default function Home() {
       return data;
     } else {
       data = fetch(path).then(r=>r.json());
-      cache.put(path, data, 1000 * 60 * 60); //one hour
+      cache.put(path, data, 1000 * 60 * 60 * 24); //one day
       return data;
     }
   }
@@ -100,20 +100,28 @@ export default function Home() {
         <button onClick={()=>{
           clearFilters()
           }
-          }>Reset Filters</button>
+          }>Clear Filters</button>
 
         <div className={styles.arrows}>
-          <button onClick={()=> {
+          <button disabled={page == 1} onClick={()=> {
             if (page !== 1) {
               setPage(page - 1);
             }
-          }}>Prev Page</button>
-          <button onClick={()=> {
+          }}>Prev Page {page == 1 ? '' : '(' + (page - 1) + ')'}</button>
+          <button disabled={page == 10} onClick={()=> {
             if (page !== 10) {
               setPage(page + 1);
             }
           }
-          }>Next Page</button>
+          }>Next Page {page == 10 ? '' : '(' + (page + 1) + ')'}</button>
+        </div>
+
+        <div className={styles.header}>
+          <h2 className={styles['row-child']}>Name</h2>
+          <h2 className={styles['row-child']}>Cuisine</h2>
+          <h2 className={styles['row-child']}>Borough</h2>
+          <h2 className={styles['row-child']}>Address</h2>
+          <h2 className={styles['row-child']}>Restaurant ID</h2>
         </div>
 
         {restaurants.map((r,i)=> <RestaurantRow key={r.restaurant_id} restaurant={r}/>)}

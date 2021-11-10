@@ -122,6 +122,14 @@
   cursor: pointer;
 }
 
+.header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  cursor: pointer;
+  border-bottom: black solid;
+}
+
 .row-child {
   width: 20%;
 }
