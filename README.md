@@ -1,8 +1,6 @@
 # Bits of Good Backend Final Project
 
-We are going on a trip to the greatest city in the world, New York City!! Being a major metropolitan area, NYC has a lot of restaurants, and we have a handy dandy database of all the restaurants in the NYC area.
-
-Unfortunately for us, I am a sad frontend developer, and while the frontend is completely operational, I have no idea how to query for the data I want! Help me write a comprehensive and complete API to help finish the application.
+Hey user! This is my (Liam's) implememtation of the BoG bootcamp backend final. I (think) I fulfilled all the of the requirements for parts 1 and 2, the neighborhood geometry, some basic server-side caching and sort of performant pagination. I modified the frontend a little bit to work with my pagination, so the filters now automatically appply themselves upon selection. The "apply filters" button has been replaced with a "reset filters", and I chose to limit pages to 10 (just for simplicity). 
 
 ## Part 0: Setup
 
